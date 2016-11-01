@@ -258,18 +258,23 @@ Function description
 	IPMSG_GETPUBKEY/IPMSG_ANSPUBKEY both require the value which is
 	encryption capability (Exp. IPMSG_RSA_1024) flag uses "OR" at first
 	part of extension  
-	
+	IPMSG_GETPUBKEY/IPMSG_ANSPUBKEY 都需要在扩展的开始指定加密信息(例.IPMSG_RSA_1024)的OR值.
 
 	In addition, In IPMSG_ANSPUBKEY, public key written as EE-NNNNNN
 	E=Exponent, N=Modulus)devide by ':'. and Input the delimiter '-' 
 	between E and N.
+	此外,在 IPMSG_ANSPUBKEY 中, 公钥写成 EE-NNNNNN格式(E=指数, N=系数), 注意在E, N之间
+	使用’-’作为分隔符, (多个公钥用’:’区分?).
 
 	This sequence can be skipped after the 2nd Send/Receive process by 
 	memorizing public key and encrypted data. 
+	通过记录公钥及加密配置信息, 能让你在第二次及之后的通信可以省略这个步骤.
 	
 	(Encrypted message)After a sender creates a common key that is 
 	supported both sender and receiver, a common key can encrypt a message. 
 	In addition, a receiver's public key encrypts the common key.
+	(加密消息)当sender与receiver都能支持sender创建的普通密钥时, 这个密钥就可以用来加密消息.
+	此外, 接收者的公钥加密普通密钥.
 
 
 	(Encrypted message transmission) IPMSG_ENCRYPTOPT is used in
@@ -278,15 +283,24 @@ Function description
 	Then use common key which encrypt with public key devide by ':'.
 	Then input message which is eccrypted by public key devide by ':'.
 	If both supports IPMSG_SIGN_XXX, then add ':' and signeture. 
+	(加密消息传送) IPMSG_ENTRYOPT 在 IPMSG_SENDMSG 中使用.取公钥与普通密钥类型的OR值, 插入扩展区的开始.
+	然后加入使用’:’为分隔符的公钥加密的普通密钥.
+	然后加入使用’:’为分隔符的公钥加密后的消息.
+	如果都支持 IPMSG_SIGN_XXX, 然后加入’:’为分隔符的签名.
+	(?.这一段需要添加示例)
 
 	Also, In the method of encode padding, PKCS#1ECB key is used for RSA, 
 	PKCS#5 CBC common key is used for RC2/blowfish.
+	当然, 在编码填充方法里, PKCS#1ECB 用于 RSA, PKCS#5 CBC 用于 RC2/blowfish.
 
 	Also, The Packet related to Entry manifestation the capability of 
-	ecryption support using  IPMSG_ENCRYPTOPT
+	encryption support using  IPMSG_ENCRYPTOPT
+	?
 
 	(Message with Electric Signature) IPMSG_SIGN_SHA1 is used in
 	IPMSG_SENDMSG. format is "encoded-message:RSA-sign(SHA-1(message))"
+	(电子签名消息) 在 IPMSG_SENDMSG 中使用 IPMSG_SIGN_SHA1.
+	格式为: "encoded-message:RSA-sign(SHA-1(message))"
 
 	(Username extension with pubkey-fingerprint)
 	Support IPMSG_RSA_2048 and IPMSG_SIGN_SHA1, username format must use
@@ -301,8 +315,10 @@ Function description
 	   3. calcurate 64bit value of XOR 3 parts of 64bit. (finger print value)
 	   4. encode 16 characters of hex.
 	   5. add to username ... user-<64bit finger print as hex string>
+	?
 
 	Recommend to check the signature from using this extension.
+	?
 
 	(Inline image extension)
 	inline image using file attach mechanism. but it requires to use
@@ -313,9 +329,17 @@ Function description
 	of previous images.
 	 ex) message:  "abc[image1]cdef[image2]g..."
 	     position:  012   3    4567   8    9...
+	(联机图片扩展)
+	联机图片使用文件附件机制.但是需要使用 IPMSG_FILE_CLIPBOARD 选项.通常为PNG文件.
+	在 IPMSG_FILE_CLIPBOARDPOS=pos 位置插入图片.扩展名 extend-attr=val(详见4.文件附件扩展).
+	如果插入多个图片, position 必须与前一个图片的值相加.?
+	 exp) message:  "abc[image1]cdef[image2]g..."
+	     position:  012   3    4567   8    9...
 
 	 To indicate a capability of inline image, use IPMSG_CLIPBOARDOPT in
 	 IPMSG_BR_ENTRY/IPMSG_ANS_ENTRY/IPMSG_BR_ABSENCE command.
+	在 IPMSG_BR_ENTRY/IPMSG_ANS_ENTRY/IPMSG_BR_ABSENCE 中启用 IPMSG_CLIPBOARDOPT 来声明支持联机
+	图片功能.
 
 
      4) Extension with file attachment(Available from version-9)
