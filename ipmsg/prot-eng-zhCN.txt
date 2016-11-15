@@ -6,13 +6,15 @@ English document was translated by Mr.Kanazawa and not verified yet.
                                                           H.Shirouzu
                                                     https://ipmsg.org
 ---------------------------------------------------------------------
+文中带有(*Ext)或(*Exp)标记的为翻译文档时译者的附加内容.
 
 About IP Messenger
 	This is a Send/Receive message service using the TCP/UDP Port.
 
 Characteristics
 	IP Messenger can be installed in any OS if TCP/IP is used on your machine.
-	Dynamic member recognition can be done within your network or specified network.（在网络中完成了动态用户识别机制。）
+	Dynamic member recognition can be done within your network or specified network.
+	（在网络中完成了动态用户识别机制。）
 	You can exchange messages between all IPMsg members. 
 
 Function description
@@ -162,6 +164,8 @@ Function description
 
 	An IPMSG_BR_ENTRY command notifies a new entry to the current
 	members at start-up. 飞鸽启动时使用 IPMSG_BR_ENTRY 命令向当前所有用户发送上线通知。
+	(*Ext:在 IPMSG_BR_ENTRY, IPMSG_ANSENTRY, IPMSG_BR_ABSENCE 这几个初始包(Entry package)可以
+	启用 IPMSG_CAPUTF8OPT, IPMSG_FILEATTACHOPT 位来分别声明支持UTF-8, 文件传送.)
 
 	All members add the new member to their list after getting a notification message.
 	An IPMSG_ANSENTRY command sends a message back to the new member.
@@ -185,7 +189,9 @@ Function description
 	Add an IPMSG_DIALUPOPT flag for dial-up users who can't be reached by 
 	a broadcast command.  A member recognition command needs to be 
 	sent individually to the members with this optional flag. 
-	IPMSG_BR_ENTRY, IPMSG_ANSENTRY, IPMSG_BR_ABSENCE 放在 IPMSG_ABSENCEOPT 位中。在附加命令中输入昵称。
+	IPMSG_BR_ENTRY,IPMSG_ANSENTRY,IPMSG_BR_ABSENCE 启用 IPMSG_ABSENCEOPT 位来进入缺席模式。
+	在附加命令中输入昵称。
+	(*Ext: 启用 IPMSG_ABSENCEOPT 位进入缺席模式, 不启用则视为离开缺席模式即正常模式.)
 	（可选）添加 IPMSG_DIALUPOPT 位给广播信息不能达到的拨号用户。用户判定是否需要发送这个命令给个别用户。
 
 	(Extended group)IPMSG_BR_ENTRY and IPMSG_BR_ABSENCE commands 
@@ -194,8 +200,7 @@ Function description
 	command and extended name).
 	（扩展组）IPMSG_BR_ENTRY, IPMSG_BR_ABSENCE 可以发送组名。
 	在当前命令格式串后添加组名（在命令和附加名之间添加’\0’）
-	Exp(not valid): 
-	“1:100:shirouzu:jupiter:0x00000101:Jack\0Work Group\0Friends”
+	(*Exp: 1:24:user:host:0x00000001:Jack\0WorkGroup\0\0)
 
      2) Send/Receive Message
 	Send Message uses an IPMSG_SENDMSG command that can input a message
@@ -348,7 +353,8 @@ Function description
 	File transfer (download permission)notification sends a message
 	with attachment. 
 	Input '\0' after the message and attachment file data.
-	
+	启用 IPMSG_FILEATTACHOPT 位的 IPMSG_SENDMSG 命令用于文件传送请求消息.
+	在消息后
 
 	fileID:filename:size:mtime:fileattr[:extend-attr=val1
 	[,val2...][:extend-attr2=...]]:\a:fileID...
@@ -389,6 +395,7 @@ Function description
 
 	Add an IPMSG_FILEATTACHOPT flag for an Entry packet to support the 
 	attachment file.
+	在初始包启用 IPMSG_FILEATTACHOPT 位来声明支持文件附件传送.
 
      5) UTF-8 extension
 
@@ -405,11 +412,16 @@ Function description
 	在 IPMSG_BR_ENTRY/IPMSG_ANS_ENTRY/IPMSG_BR_ABSENCE 命令中启用 IPMSG_CAPUTF8OPT 来声明支持UTF-8.
 	在 IPMSG_SENDMSG 等命令中启用 IPMSG_UTF8OPT 来指明当前消息为UTF-8编码消息.
 	需要注意的是, 为了向后兼容,IPMSG_BR_ENTRY/IPMSG_BR_EXIT/IPMSG_BR_ABSENCE命令不许启用IPMSG_UTF8OPT.
-	?所以, 在这些实例后添加 \0\n(如果不属于任何分组, 使用 \0\0\n)
+	所以, 在这些实例后添加 \0\n(如果不属于任何分组, 使用 \0\0\n)
 	   UN: username(utf-8)\n
 	   HN: hostname(utf-8)\n
 	   NN: nickname(utf-8)\n
 	   GN: groupname(utf-8)\n
+	(*Exp: 
+	1:24:user:host:0x01200001:nick\0group\0\0UN:user\0\nHN:host\0\nNN:nick\0\nGN:group\0\0\n
+	上述命令为更改组名后发送.启用 IPMSG_CAPUTF8OPT 以及 IPMSG_FILEATTACHOPT 位的
+	IPMSG_BR_ENTRY 命令.用户名user,主机名host,昵称nick,组名group.)
+	
 
      6) Other commands
 
