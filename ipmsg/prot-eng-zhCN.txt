@@ -64,7 +64,7 @@ Function description
      IPMSG_SERVEROPT		Server(Reserved) 服务器（保留）
      IPMSG_DIALUPOPT		Send individual member recognition command 发送个人用户识别命令
 
-     IPMSG_SENDCHECKOPT	Transmission check 传送验证
+     IPMSG_SENDCHECKOPT	Transmission check 传送验证(当接收到开启此选项位的命令,需要回复对应的传送验证 chap.3.2)
      IPMSG_SECRETOPT		Sealed message 封闭信息
      IPMSG_READCHECKOPT	Sealed message check(version8) 封闭信息验证
      IPMSG_PASSWORDOPT	Lock 锁
@@ -79,8 +79,8 @@ Function description
      IPMSG_ENCRYPTOPT	Code 编码
      IPMSG_ENCEXTMSGOPT	Encrypt file attach information 加密附件相关信息
 
-     IPMSG_CAPUTF8OPT	UTF-8 Capability 
-     IPMSG_UTF8OPT		Using UTF-8
+     IPMSG_CAPUTF8OPT	UTF-8 Capability (用于兼容旧版本 chap.3.5)
+     IPMSG_UTF8OPT		Using UTF-8 (用于消息发送 chap.3.5)
      IPMSG_CLIPBOARDOPT	Clipboard image Capability
 
      IPMSG_RETRYOPT		Re-send flag(Use when acquiring HOSTLIST) 重发位(获取hostlist时使用)
