@@ -206,7 +206,7 @@ Function description
 	Send Message uses an IPMSG_SENDMSG command that can input a message
 	in the extended area. 
 	使用 IPMSG_SENDMSG 发送消息，在扩展区添加具体消息内容。
-	Receive Message sends back an IPMSG_RECVMSG command only 
+	Receive Message sends back   IPMSG_RECVMSG command only 
 	if an IPMSG_SENDCHECKOPT flag is ON. Input the original packet number 
 	to the extended area. 
 	如果对方需要回信确认（需启用 IPMSG_SENDCHECKOPT 位），
